@@ -2,7 +2,7 @@ import { z } from "zod";
 import { compare, hash } from "bcryptjs";
 import { createAuthSession } from "@/lib/auth/session";
 import { db } from "@/lib/db/client";
-import { teams, users, merchantAccounts, merchantAccountMembers } from "@/lib/db/schema";
+import { users, merchantAccounts, merchantAccountMembers } from "@/lib/db/schema";
 
 // Replication pattern for server actions in this codebase:
 // 1) Validate FormData with Zod.
@@ -61,16 +61,6 @@ export async function signUpWithPassword(prevState: any, formData: FormData) {
     userId,
     role: "owner",
     joinedAt: new Date(),
-  });
-
-  // Optionally auto-create personal team for backward compatibility
-  // You can remove the below block if not needed
-  const teamId = crypto.randomUUID();
-  await db.insert(teams).values({
-    id: teamId,
-    name: `${firstName} ${lastName}'s Team`,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   });
 
   // Set session/cookie for new user
