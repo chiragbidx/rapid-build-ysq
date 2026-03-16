@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useFormState } from "react-dom";
-import { signUpWithPassword, signInWithPassword } from "./actions"; // do NOT import the full actions file, just the server action functions
+import { signUpWithPassword, signInWithPassword } from "./actions";
 
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -21,20 +20,13 @@ const signInSchema = z.object({
   password: z.string().min(8),
 });
 
-// Rather than importing the full ./actions file, we only import the server actions
-
 function AuthForm({ mode }: { mode: "signup" | "signin" }) {
-  const [formState, formAction] = useFormState(
-    mode === "signup" ? signUpWithPassword : signInWithPassword,
-    {}
-  );
-
-  // use `react-hook-form` for client-side input management, and submit to server action
   const [form, setForm] = React.useState({
     email: "",
     password: "",
     firstName: "",
     lastName: "",
+    error: "",
   });
   const [submitting, setSubmitting] = React.useState(false);
 
