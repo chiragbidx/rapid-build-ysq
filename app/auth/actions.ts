@@ -1,3 +1,6 @@
+// Actions: server-only, never imported in client
+"use server";
+
 import { z } from "zod";
 import { compare, hash } from "bcryptjs";
 import { createAuthSession } from "@/lib/auth/session";
@@ -5,7 +8,7 @@ import { db } from "@/lib/db/client";
 import { users, merchantAccounts, merchantAccountMembers } from "@/lib/db/schema";
 
 // Replication pattern for server actions in this codebase:
-// 1) Validate FormData with Zod.
+// 1) Validate FormData or object with Zod.
 
 const signUpSchema = z.object({
   email: z.string().email(),
@@ -14,9 +17,14 @@ const signUpSchema = z.object({
   lastName: z.string().min(1),
 });
 
-// Registration handler (updated for merchant accounts)
-export async function signUpWithPassword(prevState: any, formData: FormData) {
-  const parsed = signUpSchema.safeParse(Object.fromEntries(formData));
+// These functions are truly server-only and safe to import as named exports only in client forms
+export async function signUpWithPassword(_prevState: any, formData: any) {
+  let parsed;
+  if (formData instanceof FormData) {
+    parsed = signUpSchema.safeParse(Object.fromEntries(formData));
+  } else {
+    parsed = signUpSchema.safeParse(formData);
+  }
   if (!parsed.success) {
     return { success: false, message: parsed.error.errors[0].message };
   }
@@ -54,7 +62,6 @@ export async function signUpWithPassword(prevState: any, formData: FormData) {
     updatedAt: new Date(),
   });
 
-  // Add user as Owner in merchant account
   await db.insert(merchantAccountMembers).values({
     id: crypto.randomUUID(),
     merchantAccountId,
@@ -63,7 +70,6 @@ export async function signUpWithPassword(prevState: any, formData: FormData) {
     joinedAt: new Date(),
   });
 
-  // Set session/cookie for new user
   await createAuthSession({ userId, email });
 
   return { success: true, message: "Account created", redirect: "/dashboard" };
@@ -74,8 +80,13 @@ const signInSchema = z.object({
   password: z.string().min(8),
 });
 
-export async function signInWithPassword(prevState: any, formData: FormData) {
-  const parsed = signInSchema.safeParse(Object.fromEntries(formData));
+export async function signInWithPassword(_prevState: any, formData: any) {
+  let parsed;
+  if (formData instanceof FormData) {
+    parsed = signInSchema.safeParse(Object.fromEntries(formData));
+  } else {
+    parsed = signInSchema.safeParse(formData);
+  }
   if (!parsed.success) {
     return { success: false, message: parsed.error.errors[0].message };
   }
@@ -97,5 +108,3 @@ export async function signInWithPassword(prevState: any, formData: FormData) {
 
   return { success: true, message: "Signed in", redirect: "/dashboard" };
 }
-
-// Add password reset and other flows as needed
