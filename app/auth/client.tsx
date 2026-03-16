@@ -2,11 +2,9 @@
 
 import * as React from "react";
 import { signUpWithPassword, signInWithPassword } from "./actions";
-
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 
 const signUpSchema = z.object({
   email: z.string().email(),
@@ -75,68 +73,60 @@ function AuthForm({ mode }: { mode: "signup" | "signin" }) {
       </h1>
       {mode === "signup" && (
         <>
-          <FormField
-            render={({}) => (
-              <FormItem>
-                <FormLabel>First Name</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    value={form.firstName}
-                    onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-                    required
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            render={({}) => (
-              <FormItem>
-                <FormLabel>Last Name</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    value={form.lastName}
-                    onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-                    required
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+          <div>
+            <label className="block font-medium mb-1" htmlFor="firstName">
+              First Name
+            </label>
+            <Input
+              id="firstName"
+              type="text"
+              value={form.firstName}
+              onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+              required
+              autoComplete="given-name"
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1" htmlFor="lastName">
+              Last Name
+            </label>
+            <Input
+              id="lastName"
+              type="text"
+              value={form.lastName}
+              onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+              required
+              autoComplete="family-name"
+            />
+          </div>
         </>
       )}
-      <FormField
-        render={({}) => (
-          <FormItem>
-            <FormLabel>Email</FormLabel>
-            <FormControl>
-              <Input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
-      <FormField
-        render={({}) => (
-          <FormItem>
-            <FormLabel>Password</FormLabel>
-            <FormControl>
-              <Input
-                type="password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                required
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
+      <div>
+        <label className="block font-medium mb-1" htmlFor="email">
+          Email
+        </label>
+        <Input
+          id="email"
+          type="email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          required
+          autoComplete="email"
+        />
+      </div>
+      <div>
+        <label className="block font-medium mb-1" htmlFor="password">
+          Password
+        </label>
+        <Input
+          id="password"
+          type="password"
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          required
+          autoComplete={mode === "signup" ? "new-password" : "current-password"}
+        />
+      </div>
       {form.error && (
         <div className="text-red-600 text-sm mb-2 text-center">{form.error}</div>
       )}
