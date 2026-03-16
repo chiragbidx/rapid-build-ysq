@@ -7,9 +7,14 @@ import {
   ChevronDown,
   Home,
   Hammer,
-  Settings,
   Users,
   CreditCard,
+  DollarSign,
+  User2,
+  FileText,
+  TrendingUp,
+  Activity,
+  Banknote
 } from "lucide-react";
 import {
   Collapsible,
@@ -26,22 +31,24 @@ type NavItem = {
 
 const sections: { title: string; items: NavItem[] }[] = [
   {
-    title: "Platform",
+    title: "StripeForge",
     items: [
-      { label: "Overview", href: "/dashboard", icon: Home },
-      {
-        label: "Feature",
-        href: "/dashboard/feature",
-        icon: Hammer,
-      },
+      { label: "Dashboard", href: "/dashboard", icon: Home },
+      { label: "Payments", href: "/dashboard/payments", icon: DollarSign },
+      { label: "Customers", href: "/dashboard/customers", icon: User2 },
+      { label: "Invoices", href: "/dashboard/invoices", icon: FileText },
+      { label: "Payouts", href: "/dashboard/payouts", icon: Banknote },
+      { label: "Reports", href: "/dashboard/reports", icon: TrendingUp },
+      { label: "Activity Log", href: "/dashboard/activity", icon: Activity }
     ],
   },
   {
     title: "Account",
     items: [
+      { label: "Merchant Accounts", href: "/dashboard/merchant", icon: Hammer },
       { label: "Team", href: "/dashboard/team", icon: Users },
       { label: "Billing", href: "#", icon: CreditCard, disabled: true },
-      { label: "Settings", href: "/dashboard/settings", icon: Settings },
+      { label: "Settings", href: "/dashboard/settings", icon: Users },
     ],
   },
 ];
